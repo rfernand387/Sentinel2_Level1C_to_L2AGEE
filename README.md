@@ -10,17 +10,18 @@ There are steps that should ideally be applied to a number of Level 1C scenes th
 
 On a fast disk make a directories
 
-./imports
-./working
-./exports
+./imports  
+./working  
+./exports  
 
 Download Sen2Cor-02.08.00 and extract unzipped folder in the ./working directory
 Download S2_L1C_to_L2A.ipynb to ./working
-Start an Anaconda 3 terminal,  import (first time) and/or activate the gdalCCRS environment, and bring up the jupyter notebook
+Start an Anaconda 3 terminal,  import (first time) and/or activate the gdalCCRS environment,
+and bring up the jupyter notebook
 
-(base) env create -f gdalCCRS2.yml
-(base) activate gdalCCRS
-(gdalCCRS) jupyter lab
+(base) conda env create -f gdalCCRS2.yml  
+(base) activate gdalCCRS  
+(gdalCCRS) jupyter lab  
 
 The notebook environment will pop up in a web page.  Navigate to ./working and open  S2_L1C_to_L2A.ipynb
 
