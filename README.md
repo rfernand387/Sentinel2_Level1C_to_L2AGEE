@@ -74,3 +74,11 @@ upload all images in export directory to a collection
 
 (gdalCCRS) C:\Users\rfern>geeup upload --source C:\Users\rfern\gdrive\s2msi\export -m C:\Users\rfern\gdrive\s2msi\export\metadata.csv --nodata 0 --dest users/rfernand387/export --user rfernand387@gmail.com
 
+You should see a password prompt for your google account and then confirmation of uploads.  You can check if the asset shows up in GEE.
+
+Password:
+New collection users/rfernand387/export created
+Processing image 1 out of 2: C:\Users\rfern\gdrive\s2msi\export\S2B_MSIL2A_20180509T155859_N9999_R097_T18TVR_20200522T010435.tif
+Started upload task with ID: GCIITGCRB3QCAYRYZGML6I2Y
+Processing image 2 out of 2: C:\Users\rfern\gdrive\s2msi\export\S2B_MSIL2A_20181026T160339_N9999_R097_T18TVR_20200521T152513.tif
+Started upload task with ID: LJ4KU5QODQ6E6J5LX4JDKW4C
