@@ -9,13 +9,13 @@ There are steps that should ideally be applied to a number of Level 1C scenes th
 1.  Prepare processor and directories
 
 On a fast disk make a directories
+./sen2cor  
+  ../imports  
+  ../working  
+  ../exports  
 
-./imports  
-./working  
-./exports  
-
-Download Sen2Cor-02.08.00 and extract unzipped folder in the ./working directory
-Download S2_L1C_to_L2A.ipynb to ./working
+Download Sen2Cor-02.08.00 and extract unzipped folder in the ./sen2cor directory
+Download S2_L1C_to_L2A.ipynb to downloads
 Start an Anaconda 3 terminal,  for the first time importthe gdalCCRS environment,
 
 (base) conda env create -f gdalCCRS2.yml  
@@ -24,7 +24,8 @@ subsequently, activate the enviroment (it will be saved for next time) and bring
 (base) activate gdalCCRS  
 (gdalCCRS) jupyter lab  
 
-The notebook environment will pop up in a web page.  Navigate to ./working and open  S2_L1C_to_L2A.ipynb
+The notebook environment will pop up in a web page.  Navigate to /downloads and open  S2_L1C_to_L2A.ipynb
+edit sections 9 , 10 and 11 with appropriate paths and L1C file names
 
 2.  Download Level 1C files from ESA or USGS and place unzipped products in ./imports
 
