@@ -16,10 +16,11 @@ On a fast disk make a directories
 
 Download Sen2Cor-02.08.00 and extract unzipped folder in the ./working directory
 Download S2_L1C_to_L2A.ipynb to ./working
-Start an Anaconda 3 terminal,  import (first time) and/or activate the gdalCCRS environment,
-and bring up the jupyter notebook
+Start an Anaconda 3 terminal,  for the first time importthe gdalCCRS environment,
 
 (base) conda env create -f gdalCCRS2.yml  
+
+subsequently, activate the enviroment (it will be saved for next time) and bring up the jupyter notebook
 (base) activate gdalCCRS  
 (gdalCCRS) jupyter lab  
 
