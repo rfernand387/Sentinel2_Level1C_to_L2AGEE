@@ -20,9 +20,10 @@ Start an Anaconda 3 terminal,  for the first time importthe gdalCCRS environment
 
 (base) conda env create -f gdalCCRS2.yml  
 
-subsequently, activate the enviroment (it will be saved for next time) and bring up the jupyter notebook
-(base) activate gdalCCRS  
-(gdalCCRS) jupyter lab  
+subsequently, activate the enviroment (it will be saved for next time) and bring up the jupyter notebook  
+
+(base) activate gdalCCRS    
+(gdalCCRS) jupyter lab    
 
 The notebook environment will pop up in a web page.  Navigate to /downloads and open  S2_L1C_to_L2A.ipynb
 edit sections 9 , 10 and 11 with appropriate paths and L1C file names
