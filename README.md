@@ -32,57 +32,59 @@ edit sections 9 , 10 and 11 with appropriate paths and L1C file names
 
 3.  For each SAFE file
 
-3.1 Modify step 4 of the notebook with the desired geographic subset window and the name of the input file
-
-#L2a filename and subset region in degrees
-ccLat = 45.40;
-ccLong = -75.67;
-rocWidth = 0.1;
-rocWin = [ccLong-rocWidth, ccLat+rocWidth, ccLong+rocWidth, ccLat-rocWidth]
-L1name = "S2B_MSIL1C_20180509T155859_N0206_R097_T18TVR_20180509T200612.SAFE"
+3.1 Modify step 4 of the notebook with the desired geographic subset window and the name of the input file  
+  
+#L2a filename and subset region in degrees  
+ccLat = 45.40;  
+ccLong = -75.67;  
+rocWidth = 0.1;  
+rocWin = [ccLong-rocWidth, ccLat+rocWidth, ccLong+rocWidth, ccLat-rocWidth]  
+L1name = "S2B_MSIL1C_20180509T155859_N0206_R097_T18TVR_20180509T200612.SAFE"  
 
 3.2  Run the notebook.  If it completes the last output will show a description of the final subset tif file and
 a L2A safe product will show up in the ./working directory and a L2A subset tif product will show up in the ./exports directory
 
-4.  Close the notebook and return to the anaconda terminal to upload the output products
+4.  Close the notebook and return to the anaconda terminal to upload the output products  
 
-Authenticate earth engine
+Authenticate earth engine  
 
-(gdalCCRS) earthengine authenticate
+(gdalCCRS) earthengine authenticate  
 
-web browser will pop up a page with google log in
+web browser will pop up a page with google log in  
 
-log in to account with earth engine access
+log in to account with earth engine access  
 
-a web page with credentials will pop up 
-e.g 4/0AHf8A9Y4gGTJM5bmn1JUlefTg7Poe9lRcn1CXwbOofNt1qG5xYwsdw
+a web page with credentials will pop up   
+e.g 4/0AHf8A9Y4gGTJM5bmn1JUlefTg7Poe9lRcn1CXwbOofNt1qG5xYwsdw  
 
-copy and paste at prompt in anaconda terminal
+copy and paste at prompt in anaconda terminal  
 
-initialize geeup 
+initialize geeup   
 
-(gdalCCRS) geeup init
+(gdalCCRS) geeup init  
 
-make a metadata csv file
+make a metadata csv file  
 
-(gdalCCRS) geeup getmeta --input C:\Users\rfern\gdrive\s2msi\export --metadata C:\Users\rfern\gdrive\s2msi\export\metadata.csv
+(gdalCCRS) geeup getmeta --input C:\Users\rfern\gdrive\s2msi\export --metadata C:\Users\rfern\gdrive\s2msi\export\metadata.csv  
 
-open the csv file in excel and add columns following the sample metadata.csv file
-FOR EACH OUTPUT PRODUCT
-enter date from file name in the system:start_time column
-enter the solar angles from Mean_Sun_Angle and view angles from 4th non nan value 
-  of the MTD_TL file in the GRANULE directory of the L2A safe file
-save the csv file
+open the csv file in excel and add columns following the sample metadata.csv file  
+
+for each output product 
+  i. enter date from file name in the system:start_time column  
+  ii.  enter the solar angles from Mean_Sun_Angle and view angles from 4th non nan value   
+  of the MTD_TL file in the GRANULE directory of the L2A safe file  
+  
+save the csv file   
 
 upload all images in export directory to a collection
 
-(gdalCCRS) C:\Users\rfern>geeup upload --source C:\Users\rfern\gdrive\s2msi\export -m C:\Users\rfern\gdrive\s2msi\export\metadata.csv --nodata 0 --dest users/rfernand387/export --user rfernand387@gmail.com
+(gdalCCRS) C:\Users\rfern>geeup upload --source C:\Users\rfern\gdrive\s2msi\export -m  C:\Users\rfern\gdrive\s2msi\export\metadata.csv --nodata 0 --dest users/rfernand387/export --user rfernand387@gmail.com  
 
-You should see a password prompt for your google account and then confirmation of uploads.  You can check if the asset shows up in GEE.
+You should see a password prompt for your google account and then confirmation of uploads.  You can check if the asset shows up in GEE.  
 
-Password:
-New collection users/rfernand387/export created
-Processing image 1 out of 2: C:\Users\rfern\gdrive\s2msi\export\S2B_MSIL2A_20180509T155859_N9999_R097_T18TVR_20200522T010435.tif
-Started upload task with ID: GCIITGCRB3QCAYRYZGML6I2Y
-Processing image 2 out of 2: C:\Users\rfern\gdrive\s2msi\export\S2B_MSIL2A_20181026T160339_N9999_R097_T18TVR_20200521T152513.tif
-Started upload task with ID: LJ4KU5QODQ6E6J5LX4JDKW4C
+Password:  
+New collection users/rfernand387/export created  
+Processing image 1 out of 2: C:\Users\rfern\gdrive\s2msi\export\S2B_MSIL2A_20180509T155859_N9999_R097_T18TVR_20200522T010435.tif  
+Started upload task with ID: GCIITGCRB3QCAYRYZGML6I2Y  
+Processing image 2 out of 2: C:\Users\rfern\gdrive\s2msi\export\S2B_MSIL2A_20181026T160339_N9999_R097_T18TVR_20200521T152513.tif  
+Started upload task with ID: LJ4KU5QODQ6E6J5LX4JDKW4C  
