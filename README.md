@@ -31,17 +31,21 @@ subsequently, activate the enviroment (it will be saved for next time) and bring
 (gdalCCRS) 
 
 
-2.2  Process each product using S2L1CTOL2AGEE.py3 script
+2.2  Process each product using S2L1CTOL2AGEEbatch.py3 script
 
-The code runs by specifying required import, working, export and sen2cor directories, then the center of the subimage using -N for north latitude and -E for east longitude and -r for half width of box al in degrees, then the input SAFE L1C file.
-
-
-(gdalCCRS)python F:\sen2cor\Sentinel2_Level1C_to_GEE-master\S2L1CTOL2AGEE.py3 -h 
+The code runs by processing all .SAFE files in import directorty
 
 
-(gdalCCRS) python F:\sen2cor\Sentinel2_Level1C_to_GEE-master\S2L1CTOL2AGEE.py3 -i f:\sen2cor\import\ -w f:\sen2cor\working\ -e f:\sen2cor\export\ -s f:\sen2cor\ -N 45.4 -E -75.56 -r 0.16 S2A_MSIL1C_20170926T160021_N0205_R097_T18TVR_20170926T160750.SAFE &
+(gdalCCRS)python F:\sen2cor\Sentinel2_Level1C_to_GEE-master\S2L1CTOL2AGEEbatch.py3 -h 
 
-The code should be run for all input file s in the import directory using multiple anaconda windows, a for loop executing this script, or the python subprocee option.  It will automatically update the metadata.csv file if it runs correctly.
+
+(gdalCCRS) python F:\sen2cor\Sentinel2_Level1C_to_GEE-master\S2L1CTOL2AGEEbatch.py3 -i f:\sen2cor\import\ -w f:\sen2cor\working\ -e f:\sen2cor\export\ -s f:\sen2cor\ -N 45.4 -E -75.56 -r 0.16   
+
+If you want to only process a named file use S2L1CTOL2AGEE.py3 and add the name of the .SAFE product in the import directory at the end of the command line:  
+
+(gdalCCRS) python F:\sen2cor\Sentinel2_Level1C_to_GEE-master\S2L1CTOL2AGEEbatch.py3 -i f:\sen2cor\import\ -w f:\sen2cor\working\ -e f:\sen2cor\export\ -s f:\sen2cor\ -N 45.4 -E -75.56 -r 0.16 L1directoryname.SAFE  
+
+
 
 3.  Upload all products in exports to GEE.
 
