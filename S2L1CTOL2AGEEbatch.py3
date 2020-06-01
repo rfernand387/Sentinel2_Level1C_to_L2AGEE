@@ -315,7 +315,7 @@ def main():
                 workDirname+'b12.tif', workDirname+'AOT.tif',workDirname+'WVP.tif',workDirname+'SCL.tif', \
                 workDirname+'TCI_R.tif',workDirname+'TCI_G.tif',workDirname+'TCI_B.tif', \
                 workDirname+'QA10.tif',workDirname+'QA20.tif',workDirname+'QA60.tif'],options=vrtOptions)
-            gdal.Translate(options.eDirname+exportName+'_'+str(options.centerLon)+'_'+str(options.centerLat)+'.tif',workDirname+'merged.vrt')
+            gdal.Translate(options.eDirname+exportName+'_'+str(round(options.centerLon))+'_'+str(round(options.centerLat))+'.tif',workDirname+'merged.vrt')
             gdal.Info(workDirname+'merged.vrt')
 
 
