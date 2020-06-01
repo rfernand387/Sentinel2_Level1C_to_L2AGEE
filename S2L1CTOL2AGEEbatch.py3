@@ -127,10 +127,6 @@ def addMetadata(L2path,L2name,exportName,metadataName):
     UNCLASSIFIED_PERCENTAGE= float(root0[3][3][7].text)
     VEGETATION_PERCENTAGE= float(root0[3][3][4].text)
     WATER_PERCENTAGE= float(root0[3][3][6].text)
-    system_asset_size = dirSize(L2path)
-    system_footprint =  0
-    system_index= root0[0][0][2].text
-    system_index= system_index[0:37]
     system_time_end= systemTime(root0[0][0][0].text)
     system_time_start= systemTime(root0[0][0][1].text)
     
