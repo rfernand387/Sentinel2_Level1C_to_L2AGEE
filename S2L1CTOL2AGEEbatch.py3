@@ -12,6 +12,7 @@ import gdalconst
 import os
 import glob
 from shutil import rmtree
+from shutil import copyfile
 from pathlib import Path
 import xml.etree.ElementTree as ET
 from datetime import datetime
@@ -149,10 +150,55 @@ def showMetadata(L2path,L2name,exportName,metadataName):
     tree1= ET.parse(L2name[0]+'\\'+root0[0][0][11][0][0][0].text[0:42]+'\\MTD_TL.xml')
     root1= tree1.getroot();
     e1 = root1.find('.//Mean_Viewing_Incidence_Angle[@bandId="1"]/AZIMUTH_ANGLE').text
-    print(e1)
+    #print(e1)
+
+def jp2tifBand(tifName,tifRes,bandName,bandRes,bandType,L2name,workDirname,rocWin):
+
+    #get the dummy band depending on resolution and make a safe copy
+    if bandRes == '10':
+        dummyName = 'B04_10m'
+    elif bandRes == '60':
+        dummyName = 'B01_60m'
+    else:
+        dummyName = 'B05_20m'
+
+
+
+    #print('Step 1 '+dummyName)
+    #print(gdal.Info('SENTINEL2_L2A:'+L2name+'\MTD_MSIL2A.xml'+':'+bandRes+'m:EPSG_32618'))
+    #wait = input("Press ENTER")
+
+    if (bandName+'_'+bandRes+'m') != dummyName: 
+
+        #copy the dummy file so we can later restore it
+        dummyFile = next((glob.iglob(L2name+'\\**\\*_'+dummyName+'.jp2',recursive = True)))
+        copyfile(dummyFile,workDirname+'temp.jp2')
+        #print('step2 '+dummyFile)
+        #print(workDirname+'temp.jp2')
+        #wait = input("Press ENTER")
+
+        #copy the target band over the dummy file
+        targetFile = next((glob.iglob(L2name+'\\**\\*_'+bandName+'_'+bandRes+'m.jp2',recursive=True)))
+        copyfile(targetFile,dummyFile)
+        #print('step3 '+targetFile)
+        #wait = input("Press ENTER")
+
+    #export this file as a geotiff
+    f = gdal.Open('SENTINEL2_L2A:'+L2name+'\MTD_MSIL2A.xml'+':'+bandRes+'m:EPSG_32618')
+    gdal.Translate(workDirname+tifName+'.tif',f,bandList=[1],projWin = rocWin, projWinSRS = 'EPSG:4236', \
+        xRes=tifRes,yRes=tifRes,outputType=bandType)
+    f = None
+    #print('step4 export '+workDirname+tifName+'.tif')
+    #wait = input("Press ENTER")
+
+    #restore the copied file
+    if (bandName+'_'+bandRes+'m') != dummyName: 
+        copyfile(workDirname+'temp.jp2',dummyFile)
+        #print('step5 recopy')
+        #wait = input('Press ENTER')
 
 def main():
-	#parse command line
+    #parse command line
     usage = "usage: %prog [options] arg"
     parser = OptionParser(usage)
     parser.add_option("-i", "--iDir",type="string", dest="iDirname",
@@ -173,9 +219,9 @@ def main():
     parser.add_option("-q", "--quiet",action="store_false", dest="verbose")
     (options, args) = parser.parse_args()
     if len(args) != 0:
-    	parser.error("incorrect number of arguments")
+        parser.error("incorrect number of arguments")
     if options.verbose:
-    	print("running")
+        print("running")
     
 
     
@@ -185,43 +231,92 @@ def main():
     #iterate over all .SAFE directors in import directory
     for entry in os.scandir(options.iDirname):
         if (entry.path.endswith(".SAFE")):
-        	    L1name = entry.name
-        	    print(L1name)
-        	    workDirname  = options.wDirname+L1name[0:len(L1name)-5]+'\\'
-        	    L2path = workDirname+L1name[0:8]+'2A'+L1name[10:24]
-        	    print(L2path)
-        		#make a work directory and run sen2cor and find the L2 product name
-        	    os.mkdir(workDirname)
-        	    cmd = options.sDirname  + "Sen2Cor-02.08.00-win64\\L2A_Process.bat "+options.iDirname+L1name+" --output_dir "+workDirname+'\\'
-        	    print(cmd)
-        	    os.system(cmd)
-        	    L2name = glob.glob(workDirname+L1name[0:8]+'2A'+L1name[10:24]+'*.SAFE')
+            L1name = entry.name
+            workDirname  = options.wDirname+L1name[0:len(L1name)-5]+'\\'
+            L2path = workDirname+L1name[0:8]+'2A'+L1name[10:24]
 
-        		# add a row to metadata file
-        	    exportName = (L2name[0][len(workDirname):(len(L2name[0])-5)])
-        	    addMetadata(L2path,L2name,exportName,options.eDirname+'metadata.csv')
+            #make a work directory and run sen2cor and find the L2 product name
+            os.mkdir(workDirname)
+            cmd = options.sDirname  + "Sen2Cor-02.08.00-win64\\L2A_Process.bat "+options.iDirname+L1name+" --output_dir "+workDirname+'\\'
+            print(cmd)
+            os.system(cmd)
+            L2name = glob.glob(workDirname+L1name[0:8]+'2A'+L1name[10:24]+'*.SAFE')
 
-        		#Open and subset L2A data
-        	    gdal.UseExceptions()    # Enable exceptions
-        	    f10m = gdal.Open('SENTINEL2_L2A:'+L2name[0]+'\MTD_MSIL2A.xml'+':20m:EPSG_32618')
-        	    f20m = gdal.Open('SENTINEL2_L2A:'+L2name[0]+'\MTD_MSIL2A.xml'+':20m:EPSG_32618')
-        	    f60m = gdal.Open('SENTINEL2_L2A:'+L2name[0]+'\MTD_MSIL2A.xml'+':60m:EPSG_32618')
-        	    gdal.Translate(workDirname+'b4.tif',f10m,bandList=[1],projWin = rocWin, projWinSRS = 'EPSG:4236',xRes=10,yRes=10)
-        	    gdal.Translate(workDirname+'b3.tif',f10m,bandList=[2],projWin = rocWin, projWinSRS = 'EPSG:4236',xRes=10,yRes=10)
-        	    gdal.Translate(workDirname+'b2.tif',f10m,bandList=[3],projWin = rocWin, projWinSRS = 'EPSG:4236',xRes=10,yRes=10)
-        	    gdal.Translate(workDirname+'b8.tif',f10m,bandList=[4],projWin = rocWin, projWinSRS = 'EPSG:4236',xRes=10,yRes=10)
-        	    gdal.Translate(workDirname+'b5.tif',f20m,bandList=[1],projWin = rocWin, projWinSRS = 'EPSG:4236',xRes=10,yRes=10)
-        	    gdal.Translate(workDirname+'b6.tif',f20m,bandList=[2],projWin = rocWin, projWinSRS = 'EPSG:4236',xRes=10,yRes=10)
-        	    gdal.Translate(workDirname+'b7.tif',f20m,bandList=[3],projWin = rocWin, projWinSRS = 'EPSG:4236',xRes=10,yRes=10)
-        	    gdal.Translate(workDirname+'b8a.tif',f20m,bandList=[4],projWin = rocWin, projWinSRS = 'EPSG:4236',xRes=10,yRes=10)
-        	    gdal.Translate(workDirname+'b11.tif',f20m,bandList=[5],projWin = rocWin, projWinSRS = 'EPSG:4236',xRes=10,yRes=10)
-        	    gdal.Translate(workDirname+'b12.tif',f20m,bandList=[6],projWin = rocWin, projWinSRS = 'EPSG:4236',xRes=10,yRes=10)
-        	    gdal.Translate(workDirname+'b1.tif',f60m,bandList=[1],projWin = rocWin, projWinSRS = 'EPSG:4236',xRes=10,yRes=10)
-        	    gdal.Translate(workDirname+'b9.tif',f60m,bandList=[1],projWin = rocWin, projWinSRS = 'EPSG:4236',xRes=10,yRes=10)
-        	    vrtOptions = gdal.BuildVRTOptions(separate=True)
-        	    gdal.BuildVRT(workDirname+'merged.vrt',[workDirname+'b1.tif',workDirname+'b2.tif',workDirname+'b3.tif',workDirname+'b4.tif',                                      workDirname+'b5.tif',workDirname+'b6.tif',workDirname+'b7.tif',workDirname+'b8.tif',                                      workDirname+'b8a.tif',workDirname+'b9.tif',workDirname+'b11.tif',workDirname+'b12.tif']                                    ,options=vrtOptions)
-        	    gdal.Translate(options.eDirname+exportName+'.tif',workDirname+'merged.vrt')
-        	    gdal.Info(workDirname+'merged.vrt')
+
+            # add a row to metadata file
+            exportName = (L2name[0][len(workDirname):(len(L2name[0])-5)])
+            addMetadata(L2path,L2name,exportName,options.eDirname+'metadata.csv')
+
+            #Open and subset L2A data surface reflectance bands
+            gdal.UseExceptions()    # Enable exceptions
+            f10m = gdal.Open('SENTINEL2_L2A:'+L2name[0]+'\MTD_MSIL2A.xml'+':10m:EPSG_32618')
+            f20m = gdal.Open('SENTINEL2_L2A:'+L2name[0]+'\MTD_MSIL2A.xml'+':20m:EPSG_32618')
+            f60m = gdal.Open('SENTINEL2_L2A:'+L2name[0]+'\MTD_MSIL2A.xml'+':60m:EPSG_32618')
+            gdal.Translate(workDirname+'b1.tif',f60m,bandList=[1],projWin = rocWin, projWinSRS = 'EPSG:4236',xRes=60,yRes=60)
+            gdal.Translate(workDirname+'b2.tif',f20m,bandList=[3],projWin = rocWin, projWinSRS = 'EPSG:4236',xRes=10,yRes=10)
+            gdal.Translate(workDirname+'b3.tif',f10m,bandList=[2],projWin = rocWin, projWinSRS = 'EPSG:4236',xRes=10,yRes=10)
+            gdal.Translate(workDirname+'b4.tif',f10m,bandList=[1],projWin = rocWin, projWinSRS = 'EPSG:4236',xRes=10,yRes=10)
+            gdal.Translate(workDirname+'b5.tif',f20m,bandList=[1],projWin = rocWin, projWinSRS = 'EPSG:4236',xRes=20,yRes=20)
+            gdal.Translate(workDirname+'b6.tif',f20m,bandList=[2],projWin = rocWin, projWinSRS = 'EPSG:4236',xRes=20,yRes=20)
+            gdal.Translate(workDirname+'b7.tif',f20m,bandList=[3],projWin = rocWin, projWinSRS = 'EPSG:4236',xRes=20,yRes=20)
+            gdal.Translate(workDirname+'b8.tif',f10m,bandList=[4],projWin = rocWin, projWinSRS = 'EPSG:4236',xRes=10,yRes=10)
+            gdal.Translate(workDirname+'b8a.tif',f20m,bandList=[4],projWin = rocWin, projWinSRS = 'EPSG:4236',xRes=20,yRes=20)
+            gdal.Translate(workDirname+'b9.tif',f60m,bandList=[2],projWin = rocWin, projWinSRS = 'EPSG:4236',xRes=60,yRes=60)
+            gdal.Translate(workDirname+'b11.tif',f20m,bandList=[5],projWin = rocWin, projWinSRS = 'EPSG:4236',xRes=20,yRes=20)
+            gdal.Translate(workDirname+'b12.tif',f20m,bandList=[6],projWin = rocWin, projWinSRS = 'EPSG:4236',xRes=20,yRes=20)
+            band = f10m.GetRasterBand(1)
+            print("Band Type={}".format(gdal.GetDataTypeName(band.DataType)))
+
+            # close files
+            f10m = None 
+            f20m = None 
+            f60m = None 
+
+            #ancillary bands
+#12: "AOT", unsigned int16, EPSG:32635, 10980x10980 px
+#13: "WVP", unsigned int16, EPSG:32635, 10980x10980 px
+#14: "SCL", unsigned int8, EPSG:32635, 5490x5490 px
+#15: "TCI_R", unsigned int8, EPSG:32635, 10980x10980 px
+#16: "TCI_G", unsigned int8, EPSG:32635, 10980x10980 px
+#17: "TCI_B", unsigned int8, EPSG:32635, 10980x10980 px
+#18: "QA10", unsigned int16, EPSG:32635, 10980x10980 px
+#19: "QA20", unsigned int32, EPSG:32635, 5490x5490 px
+#20: "QA60", unsigned int16, EPS
+
+            jp2tifBand('AOT',10,'AOT','20',2,L2name[0],workDirname,rocWin)
+            print('aot')
+            jp2tifBand('WVP',10,'WVP','20',2,L2name[0],workDirname,rocWin) 
+            print('wvp')
+            jp2tifBand('SCL',20,'SCL','20',2,L2name[0],workDirname,rocWin)
+            print('scl')
+            jp2tifBand('TCI_R',10,'B04','10',2,L2name[0],workDirname,rocWin)
+            print('tci_r')
+            jp2tifBand('TCI_G',10,'B03','10',2,L2name[0],workDirname,rocWin)
+            print('tci_g')
+            jp2tifBand('TCI_B',10,'B02','10',2,L2name[0],workDirname,rocWin)
+            print('tci_b') 
+            jp2tifBand('QA10',10,'SCL','20',2,L2name[0],workDirname,rocWin)
+            print('qa10')
+            jp2tifBand('QA20',20,'SCL','20',2,L2name[0],workDirname,rocWin)
+            print('qa20')
+            jp2tifBand('QA60',60,'SCL','20',2,L2name[0],workDirname,rocWin)
+            print('qa60')               
+                   #copy the dummy file back
+
+                # ancillary bands cant be accessed from the S2A driver so we copy them over reflectance bands and then translate
+                # to ensure L2A product is not messed up permanently we copy them into temp files
+                #path1 = os.scandir(options.iDirname)
+                #print(path1.name)
+                #shutil.copyfile('SENTINEL2_L2A:'+L2name[0]+'\GRANULE\*\IMG_DATA\10m\*B02*.JP2', 'SENTINEL2_L2A:'+L2name[0]+'\GRANULE\*\IMG_DATA\10m\*B02*.JP2'
+            vrtOptions = gdal.BuildVRTOptions(separate=True)
+            gdal.BuildVRT(workDirname+'merged.vrt',[workDirname+'b1.tif',workDirname+'b2.tif',workDirname+'b3.tif', \
+                workDirname+'b4.tif', workDirname+'b5.tif',workDirname+'b6.tif',workDirname+'b7.tif', \
+                workDirname+'b8.tif', workDirname+'b8a.tif',workDirname+'b9.tif',workDirname+'b11.tif', \
+                workDirname+'b12.tif', workDirname+'AOT.tif',workDirname+'WVP.tif',workDirname+'SCL.tif', \
+                workDirname+'TCI_R.tif',workDirname+'TCI_G.tif',workDirname+'TCI_B.tif', \
+                workDirname+'QA10.tif',workDirname+'QA20.tif',workDirname+'QA60.tif'],options=vrtOptions)
+            gdal.Translate(options.eDirname+exportName+'.tif',workDirname+'merged.vrt')
+            gdal.Info(workDirname+'merged.vrt')
 
 
 if __name__ == "__main__":
