@@ -1,5 +1,5 @@
 # Sentinel2_Level1C_to_GEE
-Anaconda environment and jupyter notebook to process Sentinel 2 Level 1C data to Level 2A and Upload subset to GEE
+Anaconda environment for Windows 10 and python script (should would across systems) to process Sentinel 2 Level 1C data to Level 2A and Upload subset to GEE
 
 This contains python based tools to process a downloaded Sentinel 2 Level 1C safe product to Level 2A safe product
 and then also a Level 2A simple geotiff subset product that can be uploaded to Google Earth Engine.
@@ -8,20 +8,16 @@ There are steps that should ideally be applied to a number of Level 1C scenes th
 
 1.  Prepare processor and directories
 
-On a fast disk make a directories
+1.1 On a fast disk make a directories
 ./sen2cor  
   ../imports  
   ../working  
   ../exports  
 
-Download Sen2Cor-02.08.00 and extract unzipped folder in the ./sen2cor directory
-Download S2_L1C_to_L2A.ipynb 
-Download metadata.csv file in ./exports
-Download Level 1C files from ESA or USGS and place unzipped products in ./imports
-
-2.  For each product 
-
-2.1 Start an Anaconda 3 terminal,  for the first time importthe gdalCCRS environment,
+1.2 Download Sen2Cor-02.08.00 and extract unzipped folder in the ./sen2cor directory
+1.3 Download S2_L1C_to_L2AGEEbatch.py3
+1.4 Download metadata.csv file in ./exports
+1.5 Start an Anaconda 3 terminal,  for the first time importthe gdalCCRS environment,
 
 (base) conda env create -f gdalCCRS2.yml  
 
@@ -30,21 +26,25 @@ subsequently, activate the enviroment (it will be saved for next time) and bring
 (base) activate gdalCCRS    
 (gdalCCRS) 
 
+1.6 Test that gdal and geeup are installed
 
-2.2  Process each product using S2L1CTOL2AGEEbatch.py3 script
+(gdalCCRS)gdalinfo 
+(gdalCCRS) geeup -h 
+
+If they are not installed you will get errors.  In which case you have to resinatll them yourself (see https://github.com/samapriya/geeup) 
+
+2. Download and process products to L2A GEE format
+
+2.1 Download Level 1C files from ESA or USGS and place unzipped products in ./imports
+
+2.2   Process each product using S2L1CTOL2AGEEbatch.py3 script
 
 The code runs by processing all .SAFE files in import directorty
-
 
 (gdalCCRS)python F:\sen2cor\Sentinel2_Level1C_to_GEE-master\S2L1CTOL2AGEEbatch.py3 -h 
 
 
 (gdalCCRS) python F:\sen2cor\Sentinel2_Level1C_to_GEE-master\S2L1CTOL2AGEEbatch.py3 -i f:\sen2cor\import\ -w f:\sen2cor\working\ -e f:\sen2cor\export\ -s f:\sen2cor\ -N 45.4 -E -75.56 -r 0.16   
-
-If you want to only process a named file use S2L1CTOL2AGEE.py3 and add the name of the .SAFE product in the import directory at the end of the command line:  
-
-(gdalCCRS) python F:\sen2cor\Sentinel2_Level1C_to_GEE-master\S2L1CTOL2AGEEbatch.py3 -i f:\sen2cor\import\ -w f:\sen2cor\working\ -e f:\sen2cor\export\ -s f:\sen2cor\ -N 45.4 -E -75.56 -r 0.16 L1directoryname.SAFE  
-
 
 
 3.  Upload all products in exports to GEE.
