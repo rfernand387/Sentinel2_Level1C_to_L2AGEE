@@ -242,10 +242,10 @@ def main():
             L2path = workDirname+L1name[0:8]+'2A'+L1name[10:24]
 
             #make a work directory and run sen2cor and find the L2 product name
-            #os.mkdir(workDirname)
+            os.mkdir(workDirname)
             cmd = options.sDirname  + "Sen2Cor-02.08.00-win64\\L2A_Process.bat "+options.iDirname+L1name+" --output_dir "+workDirname+'\\'
             print(cmd)
-            #os.system(cmd)
+            os.system(cmd)
             L2name = glob.glob(workDirname+L1name[0:8]+'2A'+L1name[10:24]+'*.SAFE')
 
 
