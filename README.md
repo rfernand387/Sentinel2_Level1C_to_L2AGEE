@@ -1,5 +1,5 @@
 # Sentinel2_Level1C_to_GEE
-Anaconda environment for Windows 10 and python script (should would across systems) to process Sentinel 2 Level 1C data to Level 2A and Upload subset to GEE
+Anaconda environment for Windows 10 and python script (should would across systems) to process Sentinel 2 Level 1C data to Level 2A and upload subset to GEE
 
 This contains python based tools to process a downloaded Sentinel 2 Level 1C safe product to Level 2A safe product
 and then also a Level 2A simple geotiff subset product that can be uploaded to Google Earth Engine.
