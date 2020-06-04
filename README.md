@@ -4,6 +4,9 @@ Anaconda environment for Windows 10 and python script (should would across syste
 This contains python based tools to process a downloaded Sentinel 2 Level 1C safe product to Level 2A safe product
 and then also a Level 2A simple geotiff subset product that can be uploaded to Google Earth Engine.
 
+Please cite: Fernandes, R.(2020) Sentinel 2 Level 1C to Level 2A Googe Earth Engine Upload.  Government of Canada. 
+Restrictions: None.  
+
 There are steps that should ideally be applied to a number of Level 1C scenes that share the same spatial subset.
 
 1.  Prepare processor and directories
@@ -16,7 +19,7 @@ There are steps that should ideally be applied to a number of Level 1C scenes th
 
 1.2 Download Sen2Cor-02.08.00 and extract unzipped folder in the ./sen2cor directory
 1.3 Download S2_L1C_to_L2AGEEbatch.py3
-1.4 Download metadata.csv file in ./exports
+1.4 Download metadata.csv file in ./exports 
 1.5 Start an Anaconda 3 terminal,  for the first time importthe gdalCCRS environment,
 
 (base) conda env create -f gdalCCRS2.yml  
@@ -49,9 +52,9 @@ The code runs by processing all .SAFE files in import directorty
 
 3.  Upload all products in exports to GEE.
 
-2.1 Open anaconda and active gdalCCRS
+3.1 Open anaconda and active gdalCCRS
 
-2.2 Authenticate earth engine  
+4.2 Authenticate earth engine  
 
 (gdalCCRS) earthengine authenticate  
 
