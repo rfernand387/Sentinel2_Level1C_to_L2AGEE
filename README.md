@@ -80,3 +80,5 @@ Processing image 1 out of 2: C:\Users\rfern\gdrive\s2msi\export\S2B_MSIL2A_20180
 Started upload task with ID: GCIITGCRB3QCAYRYZGML6I2Y  
 Processing image 2 out of 2: C:\Users\rfern\gdrive\s2msi\export\S2B_MSIL2A_20181026T160339_N9999_R097_T18TVR_20200521T152513.tif  
 Started upload task with ID: LJ4KU5QODQ6E6J5LX4JDKW4C  
+
+4.  Delete files from import,working and export directories when no longer needed.
