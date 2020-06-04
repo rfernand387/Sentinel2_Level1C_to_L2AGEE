@@ -151,9 +151,9 @@ def showMetadata(L2name,exportName,metadataName):
     #print(e1)
 
 def getEPSG(L2name):
-    tree0= ET.parse(L2name[0]+'\MTD_MSIL2A.xml')
+    tree0= ET.parse(L2name+'\MTD_MSIL2A.xml')
     root0 = tree0.getroot()
-    tree1= ET.parse(L2name[0]+'\\'+root0[0][0][11][0][0][0].text[0:42]+'\\MTD_TL.xml')
+    tree1= ET.parse(L2name+'\\'+root0[0][0][11][0][0][0].text[0:42]+'\\MTD_TL.xml')
     root1= tree1.getroot()
     epsg= (root1.find('.//HORIZONTAL_CS_CODE').text)
     return(epsg)
@@ -190,7 +190,8 @@ def jp2tifBand(tifName,tifRes,bandName,bandRes,bandType,L2name,workDirname,rocWi
         #wait = input("Press ENTER")
 
     #export this file as a geotiff
-    f = gdal.Open('SENTINEL2_L2A:'+L2name+'\MTD_MSIL2A.xml'+':'+bandRes+'m:EPSG_32618')
+    epsg = getEPSG(L2name)
+    f = gdal.Open('SENTINEL2_L2A:'+L2name+'\MTD_MSIL2A.xml'+':'+bandRes+'m:'+epsg.replace(':','_'))
     gdal.Translate(workDirname+tifName+'.tif',f,bandList=[1],projWin = rocWin, projWinSRS = 'EPSG:4236', \
         xRes=tifRes,yRes=tifRes,outputType=bandType)
     f = None
@@ -242,10 +243,10 @@ def main():
             L2path = workDirname+L1name[0:8]+'2A'+L1name[10:24]
 
             #make a work directory and run sen2cor and find the L2 product name
-            os.mkdir(workDirname)
+            #os.mkdir(workDirname)
             cmd = options.sDirname  + "Sen2Cor-02.08.00-win64\\L2A_Process.bat "+options.iDirname+L1name+" --output_dir "+workDirname+'\\'
             print(cmd)
-            os.system(cmd)
+            #os.system(cmd)
             L2name = glob.glob(workDirname+L1name[0:8]+'2A'+L1name[10:24]+'*.SAFE')
 
 
@@ -256,7 +257,7 @@ def main():
             #Open and subset L2A data surface reflectance bands
             gdal.UseExceptions()    # Enable exceptions
             # determine projection
-            epsg = getEPSG(L2name)
+            epsg = getEPSG(L2name[0])
             f10m = gdal.Open('SENTINEL2_L2A:'+L2name[0]+'\MTD_MSIL2A.xml'+':10m:'+epsg.replace(':','_'))
             f20m = gdal.Open('SENTINEL2_L2A:'+L2name[0]+'\MTD_MSIL2A.xml'+':20m:'+epsg.replace(':','_'))
             f60m = gdal.Open('SENTINEL2_L2A:'+L2name[0]+'\MTD_MSIL2A.xml'+':60m:'+epsg.replace(':','_'))
