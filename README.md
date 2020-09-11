@@ -32,6 +32,7 @@ subsequently, activate the enviroment (it will be saved for next time) and bring
 1.6 Test that gdal and geeup are installed
 
 (gdalCCRS)gdalinfo 
+
 (gdalCCRS) geeup -h 
 
 If they are not installed you will get errors.  In which case you have to resinatll them yourself (see https://github.com/samapriya/geeup) 
