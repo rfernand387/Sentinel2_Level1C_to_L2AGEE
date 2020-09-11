@@ -17,12 +17,12 @@ There are steps that should ideally be applied to a number of Level 1C scenes th
   ../working  
   ../exports  
 
-1.2 Download Sen2Cor-02.08.00 and extract unzipped folder in the ./sen2cor directory
+1.2 Download Sen2Cor-02.08.00 or later from http://step.esa.int/main/third-party-plugins-2/sen2cor/sen2cor_v2-8/ and extract unzipped folder in the ./sen2cor directory
 1.3 Download S2_L1C_to_L2AGEEbatch.py3
 1.4 Download metadata.csv file in ./exports 
-1.5 Start an Anaconda 3 terminal,  for the first time importthe gdalCCRS environment,
+1.5 Start an Anaconda 3 terminal,  for the first time import the gdalCCRS environment,
 
-(base) conda env create -f gdalCCRS2.yml  
+(base) conda env create -f gdalCCRS.yml  
 
 subsequently, activate the enviroment (it will be saved for next time) and bring up the jupyter notebook  
 
@@ -52,22 +52,6 @@ The code runs by processing all .SAFE files in import directorty
 
 3.  Upload all products in exports to GEE.
 
-3.1 Open anaconda and active gdalCCRS
-
-4.2 Authenticate earth engine  
-
-(gdalCCRS) earthengine authenticate  
-
-web browser will pop up a page with google log in  
-
-log in to account with earth engine access  
-
-a web page with credentials will pop up   
-e.g 4/0AHf8A9Y4gGTJM5bmn1JUlefTg7Poe9lRcn1CXwbOofNt1qG5xYwsdw  
-
-copy and paste at prompt in anaconda terminal  
-
-2.3 initialize geeup  and upload data
 
 (gdalCCRS) geeup init  
 (gdalCCRS) C:\Users\rfern>geeup upload --source C:\Users\rfern\gdrive\s2msi\export -m  C:\Users\rfern\gdrive\s2msi\export\metadata.csv --nodata 0 --dest users/rfernand387/export --user rfernand387@gmail.com  
