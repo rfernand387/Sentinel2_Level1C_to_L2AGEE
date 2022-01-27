@@ -18,8 +18,11 @@ There are steps that should ideally be applied to a number of Level 1C scenes th
   ../exports  
 
 1.2 Download Sen2Cor-02.09.00 or later from https://step.esa.int/main/snap-supported-plugins/sen2cor/sen2cor-v2-10/ and extract unzipped folder in the ./sen2cor directory
+
 1.3 Download S2_L1C_to_L2AGEEbatch.py3
+
 1.4 Download metadata.csv file in ./exports 
+
 1.5 Start an Anaconda 3 terminal,  for the first time import the gdalCCRS environment,
 
 (base) conda env create -f gdalCCRS.yml  
